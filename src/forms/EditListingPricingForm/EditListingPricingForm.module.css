@@ -21,6 +21,10 @@
   width: 100%;
 }
 
+.cleaningFeeInput {
+  padding-top: 20px;
+}
+
 .submitButton {
   margin-top: auto;
   margin-bottom: 24px;

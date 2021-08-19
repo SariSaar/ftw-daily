@@ -30,7 +30,15 @@ const EditListingPricingPanel = props => {
 
   const classes = classNames(rootClassName || css.root, className);
   const currentListing = ensureOwnListing(listing);
-  const { price } = currentListing.attributes;
+  const { price, publicData } = currentListing.attributes;
+  console.log({ publicData })
+  const cleaningFee = publicData && publicData.cleaningFee || null;
+
+  const cleaningFeeAsMoney = cleaningFee
+    ? new Money(cleaningFee.amount, cleaningFee.currency)
+    : null;
+
+  const initialValues = { price, cleaningFee: cleaningFeeAsMoney }
 
   const isPublished = currentListing.id && currentListing.attributes.state !== LISTING_STATE_DRAFT;
   const panelTitle = isPublished ? (
@@ -46,8 +54,24 @@ const EditListingPricingPanel = props => {
   const form = priceCurrencyValid ? (
     <EditListingPricingForm
       className={css.form}
-      initialValues={{ price }}
-      onSubmit={onSubmit}
+      initialValues={initialValues}
+      onSubmit={values => {
+        const { price, cleaningFee = null } = values;
+
+        const updatedValues = {
+          price, 
+          publicData: {
+            cleaningFee: {
+              amount: cleaningFee.amount,
+              currency: cleaningFee.currency
+            },
+          },
+        };
+
+        console.log({ updatedValues })
+
+        onSubmit(updatedValues);
+      }}
       onChange={onChange}
       saveActionMsg={submitButtonText}
       disabled={disabled}
