@@ -85,9 +85,8 @@ export const filters = [
       // Note: label is not added through the translation files
       // to make filter customizations a bit easier.
       options: [
-        { key: 'smoke', label: 'Smoke' },
         { key: 'electric', label: 'Electric' },
-        { key: 'wood', label: 'Wood' },
+        { key: 'wood', label: 'Wood heated' },
         { key: 'other', label: 'Other' },
       ],
     },
@@ -125,14 +124,6 @@ export const filters = [
           label: 'Jacuzzi',
         },
         {
-          key: 'lake_view',
-          label: 'Lake view',
-        },
-        {
-          key: 'sea_view',
-          label: 'Sea view',
-        },
-        {
           key: 'barbecue',
           label: 'Barbecue',
         },
@@ -142,6 +133,21 @@ export const filters = [
         },
       ],
     },
+  },
+  {
+    id: 'view',
+    label: 'View',
+    type: 'SelectSingleFilter',
+    group: 'secondary',
+    queryParamNames: ['pub_view'],
+    config: {
+      options: [
+        { key: 'sea', label: 'Sea view' },
+        { key: 'lake', label: 'Lake view' },
+        { key: 'forest', label: 'Forest view' },
+        { key: 'garden', label: 'Garden view' },        
+      ]
+    }
   },
 ];
 

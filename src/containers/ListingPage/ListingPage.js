@@ -40,6 +40,7 @@ import {
   BookingPanel,
 } from '../../components';
 import { TopbarContainer, NotFoundPage } from '../../containers';
+import SectionViewMaybe from './SectionViewMaybe';
 
 import { sendEnquiry, fetchTransactionLineItems, setInitialValues } from './ListingPage.duck';
 import SectionImages from './SectionImages';
@@ -376,6 +377,7 @@ export class ListingPageComponent extends Component {
       </NamedLink>
     );
 
+    const viewOptions = findOptionsForSelectFilter('view', filterConfig);
     const amenityOptions = findOptionsForSelectFilter('amenities', filterConfig);
     const categoryOptions = findOptionsForSelectFilter('category', filterConfig);
     const category =
@@ -436,6 +438,7 @@ export class ListingPageComponent extends Component {
                   />
                   <SectionDescriptionMaybe description={description} />
                   <SectionFeaturesMaybe options={amenityOptions} publicData={publicData} />
+                  <SectionViewMaybe options={viewOptions} publicData={publicData} />
                   <SectionRulesMaybe publicData={publicData} />
                   <SectionMapMaybe
                     geolocation={geolocation}
