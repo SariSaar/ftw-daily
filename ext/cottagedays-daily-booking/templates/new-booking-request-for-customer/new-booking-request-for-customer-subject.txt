@@ -1,0 +1,1 @@
+You have requested to book {{transaction.listing.title}}
