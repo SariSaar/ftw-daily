@@ -27,6 +27,7 @@ import {
   txRoleIsCustomer,
   getUserTxRole,
   isRelevantPastTransition,
+  TRANSITION_DECLINE_BY_OPERATOR,
 } from '../../util/transaction';
 import { propTypes } from '../../util/types';
 import * as log from '../../util/log';
@@ -137,6 +138,8 @@ const resolveTransitionMessage = (
       ) : (
         <FormattedMessage id="ActivityFeed.transitionDecline" values={{ displayName }} />
       );
+    case TRANSITION_DECLINE_BY_OPERATOR:
+      return <FormattedMessage id="ActivityFeed.operatorDecline" />
     case TRANSITION_EXPIRE:
       return txRoleIsProvider(ownRole) ? (
         <FormattedMessage id="ActivityFeed.ownTransitionExpire" />
