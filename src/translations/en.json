@@ -363,6 +363,8 @@
   "ListingCard.perUnit": "per unit",
   "ListingCard.unsupportedPrice": "({currency})",
   "ListingCard.unsupportedPriceTitle": "Unsupported currency ({currency})",
+  "ListingPage.addToWishlistButton": "Add to your wish list",
+  "ListingPage.removeFromWishlistButton": "Remove from your wish list",
   "ListingPage.bookingSubTitle": "Start by choosing your dates.",
   "ListingPage.bookingTitle": "Book {title}",
   "ListingPage.closedListing": "This listing has been closed and can't be booked.",

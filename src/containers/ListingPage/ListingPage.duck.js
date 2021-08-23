@@ -12,7 +12,8 @@ import {
   LISTING_PAGE_DRAFT_VARIANT,
   LISTING_PAGE_PENDING_APPROVAL_VARIANT,
 } from '../../util/urlHelpers';
-import { fetchCurrentUser, fetchCurrentUserHasOrdersSuccess } from '../../ducks/user.duck';
+import { fetchCurrentUser, fetchCurrentUserHasOrdersSuccess, currentUserShowSuccess } from '../../ducks/user.duck';
+
 
 const { UUID } = sdkTypes;
 
@@ -38,6 +39,10 @@ export const FETCH_LINE_ITEMS_ERROR = 'app/ListingPage/FETCH_LINE_ITEMS_ERROR';
 export const SEND_ENQUIRY_REQUEST = 'app/ListingPage/SEND_ENQUIRY_REQUEST';
 export const SEND_ENQUIRY_SUCCESS = 'app/ListingPage/SEND_ENQUIRY_SUCCESS';
 export const SEND_ENQUIRY_ERROR = 'app/ListingPage/SEND_ENQUIRY_ERROR';
+
+export const UPDATE_PROFILE_REQUEST = 'app/ListingPage/UPDATE_PROFILE_REQUEST';
+export const UPDATE_PROFILE_SUCCESS = 'app/ListingPage/UPDATE_PROFILE_SUCCESS';
+export const UPDATE_PROFILE_ERROR = 'app/ListingPage/UPDATE_PROFILE_ERROR';
 
 // ================ Reducer ================ //
 
@@ -153,6 +158,22 @@ export const fetchLineItemsError = error => ({
 export const sendEnquiryRequest = () => ({ type: SEND_ENQUIRY_REQUEST });
 export const sendEnquirySuccess = () => ({ type: SEND_ENQUIRY_SUCCESS });
 export const sendEnquiryError = e => ({ type: SEND_ENQUIRY_ERROR, error: true, payload: e });
+
+// TODO: Fix this!
+// SDK method: sdk.currentUser.updateProfile
+export const updateProfileRequest = params => ({
+  type: UPDATE_PROFILE_REQUEST,
+  payload: { params },
+});
+export const updateProfileSuccess = result => ({
+  type: UPDATE_PROFILE_SUCCESS,
+  payload: result.data,
+});
+export const updateProfileError = error => ({
+  type: UPDATE_PROFILE_ERROR,
+  payload: error,
+  error: true,
+});
 
 // ================ Thunks ================ //
 
@@ -330,3 +351,36 @@ export const loadData = (params, search) => dispatch => {
     return Promise.all([dispatch(showListing(listingId)), dispatch(fetchReviews(listingId))]);
   }
 };
+
+export const updateWishList = actionPayload => {
+  console.log({ actionPayload })
+
+  return (dispatch, getState, sdk) => {
+    dispatch(updateProfileRequest()); // TODO: Should this have params, since the definition has params?
+    
+    const queryParams = {
+      expand: true,
+      include: ['profileImage'],
+      'fields.image': ['variants.square-small', 'variants.square-small2x'],
+    };
+    
+    return sdk.currentUser
+    .updateProfile(actionPayload, queryParams)
+    .then(response => {
+      console.log({ response })
+      dispatch(updateProfileSuccess(response));
+      
+      const entities = denormalisedResponseEntities(response);
+      if (entities.length !== 1) {
+        throw new Error('Expected a resource in the sdk.currentUser.updateProfile response');
+      }
+      const currentUser = entities[0];
+
+      console.log({currentUser}, 'after update')
+      
+      // Update current user in state.user.currentUser through user.duck.js
+      dispatch(currentUserShowSuccess(currentUser));
+    })
+    .catch(e => dispatch(updateProfileError(storableError(e))));
+  };
+}

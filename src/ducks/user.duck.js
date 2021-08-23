@@ -353,6 +353,7 @@ export const fetchCurrentUser = (params = null) => (dispatch, getState, sdk) => 
       // set current user id to the logger
       log.setUserId(currentUser.id.uuid);
       dispatch(currentUserShowSuccess(currentUser));
+      console.log({currentUser})
       return currentUser;
     })
     .then(currentUser => {

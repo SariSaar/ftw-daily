@@ -7,7 +7,6 @@ import css from './ListingPage.module.css';
 // Create new React component
 const SectionViewMaybe = props => {
     const {options, publicData} = props;
-    console.log({publicData});
     const selectedOption = publicData?.view || null;
 
     // If public data contains no selected options, return null.

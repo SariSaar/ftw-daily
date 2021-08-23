@@ -119,6 +119,62 @@
   margin: -6px 7px 0 0;
 }
 
+.wishListButton {
+  @apply --marketplaceH5FontStyles;
+  
+  font-weight: var(--fontWeightSemiBold);
+
+  border-radius: 4px;
+  min-height: 38px;
+  max-height: 45px;
+  max-width: 150px;
+  align-self: center;
+
+  @media (--viewportLarge) {
+    display: block;
+    margin-top: 79px;
+    margin-left: 60px;
+    border-left-style: solid;
+    border-left-width: 1px;
+    border-left-color: var(--matterColorNegative);
+
+    padding-left: 60px;
+
+    /* The calendar needs 312px */
+    flex-basis: 312px;
+    flex-shrink: 0;
+  }
+}
+
+.wishlistSelected {
+  /* TODO: Implement @extend .wishListButton; */
+  @apply --marketplaceH5FontStyles;
+  
+  font-weight: var(--fontWeightSemiBold);
+
+  border-radius: 4px;
+  min-height: 38px;
+  max-height: 45px;
+  max-width: 150px;
+  align-self: center;
+
+  @media (--viewportLarge) {
+    display: block;
+    margin-top: 79px;
+    margin-left: 60px;
+    border-left-style: solid;
+    border-left-width: 1px;
+    border-left-color: var(--matterColorNegative);
+
+    padding-left: 60px;
+
+    /* The calendar needs 312px */
+    flex-basis: 312px;
+    flex-shrink: 0;
+  }
+  
+  background-color: blue;
+}
 .rootForImage {
   /* Layout - image will take space defined by aspect ratio wrapper */
   position: absolute;

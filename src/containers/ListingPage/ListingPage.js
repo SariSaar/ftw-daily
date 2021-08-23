@@ -38,11 +38,12 @@ import {
   LayoutWrapperFooter,
   Footer,
   BookingPanel,
+  PrimaryButton,
 } from '../../components';
 import { TopbarContainer, NotFoundPage } from '../../containers';
 import SectionViewMaybe from './SectionViewMaybe';
 
-import { sendEnquiry, fetchTransactionLineItems, setInitialValues } from './ListingPage.duck';
+import { sendEnquiry, fetchTransactionLineItems, setInitialValues, updateWishList } from './ListingPage.duck';
 import SectionImages from './SectionImages';
 import SectionAvatar from './SectionAvatar';
 import SectionHeading from './SectionHeading';
@@ -89,6 +90,7 @@ export class ListingPageComponent extends Component {
     this.handleSubmit = this.handleSubmit.bind(this);
     this.onContactUser = this.onContactUser.bind(this);
     this.onSubmitEnquiry = this.onSubmitEnquiry.bind(this);
+    this.onAddToWishlist = this.onAddToWishlist.bind(this);
   }
 
   handleSubmit(values) {
@@ -171,6 +173,40 @@ export class ListingPageComponent extends Component {
       .catch(() => {
         // Ignore, error handling in duck file
       });
+  }
+
+  onAddToWishlist() {
+    const { currentUser, params, onUpdateWishlist } = this.props;
+    console.log('Add wishlist button clicked!');
+    console.log('current user', currentUser);
+    console.log('current listing', params.id);
+
+    const isOnWishlist = currentUser?.attributes?.privateData?.wishlist?.includes(params.id);
+    let updatedWishlist;
+
+    if (!isOnWishlist) {
+      // If wishlist doesn't have the current item
+      updatedWishlist = currentUser.attributes?.privateData?.wishlist
+        ? [...currentUsers.attributes.privateData.wishlist, params.id]
+        : [params.id];
+      } else {
+        // TODO: Fix toggling!
+        updatedWishlist = currentUser.wishlist.filter(item => item !== params.id);
+      }
+
+      const updatedUserProfile = {
+        // ...currentUser.attributes.profile,
+        
+        privateData: {
+          ...currentUser.privateData,
+          wishlist: updatedWishlist
+        }
+      };
+
+      console.log({ updatedUserProfile }, 'before API update')
+        
+    onUpdateWishlist(updatedUserProfile)
+    console.log({propsUser: this.props.currentUser})
   }
 
   render() {
@@ -460,6 +496,17 @@ export class ListingPageComponent extends Component {
                     onManageDisableScrolling={onManageDisableScrolling}
                   />
                 </div>
+                <div>
+
+                <PrimaryButton
+                  className={css.wishlistButtonClass}
+                  onClick={this.onAddToWishlist}
+                  /** TODO: Reflect toggling in button! */
+                >
+                  <FormattedMessage id="ListingPage.addToWishlistButton"/>
+                  
+                </PrimaryButton>
+
                 <BookingPanel
                   className={css.bookingPanel}
                   listing={currentListing}
@@ -476,7 +523,8 @@ export class ListingPageComponent extends Component {
                   lineItems={lineItems}
                   fetchLineItemsInProgress={fetchLineItemsInProgress}
                   fetchLineItemsError={fetchLineItemsError}
-                />
+                  />
+                </div>
               </div>
             </div>
           </LayoutWrapperMain>
@@ -540,6 +588,7 @@ ListingPageComponent.propTypes = {
   sendEnquiryError: propTypes.error,
   onSendEnquiry: func.isRequired,
   onInitializeCardPaymentData: func.isRequired,
+  onUpdateWishlist: func.isRequired,
   filterConfig: array,
   onFetchTransactionLineItems: func.isRequired,
   lineItems: array,
@@ -605,6 +654,7 @@ const mapDispatchToProps = dispatch => ({
     dispatch(fetchTransactionLineItems(bookingData, listingId, isOwnListing)),
   onSendEnquiry: (listingId, message) => dispatch(sendEnquiry(listingId, message)),
   onInitializeCardPaymentData: () => dispatch(initializeCardPaymentData()),
+  onUpdateWishlist: (currentUser, listingId) => dispatch(updateWishList(currentUser, listingId)),
 });
 
 // Note: it is important that the withRouter HOC is **outside** the
