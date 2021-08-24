@@ -56,6 +56,9 @@ const SectionHeading = props => {
           ) : null}
         </div>
       </div>
+      <div className="right">
+        {props.right}
+      </div>
     </div>
   );
 };

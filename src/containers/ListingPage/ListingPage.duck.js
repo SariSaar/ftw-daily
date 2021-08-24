@@ -353,8 +353,6 @@ export const loadData = (params, search) => dispatch => {
 };
 
 export const updateWishList = actionPayload => {
-  console.log({ actionPayload })
-
   return (dispatch, getState, sdk) => {
     dispatch(updateProfileRequest()); // TODO: Should this have params, since the definition has params?
     
@@ -367,7 +365,6 @@ export const updateWishList = actionPayload => {
     return sdk.currentUser
     .updateProfile(actionPayload, queryParams)
     .then(response => {
-      console.log({ response })
       dispatch(updateProfileSuccess(response));
       
       const entities = denormalisedResponseEntities(response);
@@ -376,8 +373,6 @@ export const updateWishList = actionPayload => {
       }
       const currentUser = entities[0];
 
-      console.log({currentUser}, 'after update')
-      
       // Update current user in state.user.currentUser through user.duck.js
       dispatch(currentUserShowSuccess(currentUser));
     })

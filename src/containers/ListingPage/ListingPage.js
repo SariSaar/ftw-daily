@@ -181,32 +181,28 @@ export class ListingPageComponent extends Component {
     console.log('current user', currentUser);
     console.log('current listing', params.id);
 
-    const isOnWishlist = currentUser?.attributes?.privateData?.wishlist?.includes(params.id);
+    const wishlist = currentUser?.attributes?.profile?.privateData?.wishlist || [];
+    const isOnWishlist = wishlist.includes(params.id);
     let updatedWishlist;
 
     if (!isOnWishlist) {
       // If wishlist doesn't have the current item
-      updatedWishlist = currentUser.attributes?.privateData?.wishlist
-        ? [...currentUsers.attributes.privateData.wishlist, params.id]
+      updatedWishlist = wishlist
+        ? [...wishlist, params.id]
         : [params.id];
       } else {
-        // TODO: Fix toggling!
-        updatedWishlist = currentUser.wishlist.filter(item => item !== params.id);
+        updatedWishlist = wishlist.filter(item => item !== params.id);
       }
 
       const updatedUserProfile = {
-        // ...currentUser.attributes.profile,
         
         privateData: {
           ...currentUser.privateData,
           wishlist: updatedWishlist
         }
       };
-
-      console.log({ updatedUserProfile }, 'before API update')
-        
+      
     onUpdateWishlist(updatedUserProfile)
-    console.log({propsUser: this.props.currentUser})
   }
 
   render() {
@@ -270,6 +266,16 @@ export class ListingPageComponent extends Component {
     if (shouldShowPublicListingPage) {
       return <NamedRedirect name="ListingPage" params={params} search={location.search} />;
     }
+
+    const isOnWishlist = this.props.currentUser?.attributes?.profile?.privateData?.wishlist?.includes(currentListing?.id?.uuid);
+    
+    const wishListButtonTitle = isOnWishlist 
+      ? 'ListingPage.removeFromWishlistButton'
+      : 'ListingPage.addToWishlistButton';
+
+    const wishlistClass = isOnWishlist
+      ? [css.wishListButton, css.wishlistSelected].join(' ')
+      : css.wishListButton;
 
     const {
       description = '',
@@ -471,7 +477,16 @@ export class ListingPageComponent extends Component {
                     hostLink={hostLink}
                     showContactUser={showContactUser}
                     onContactUser={this.onContactUser}
-                  />
+                    right={
+                      !isOwnListing &&
+                      <PrimaryButton
+                        className={wishlistClass}
+                        onClick={this.onAddToWishlist}
+                        >
+                        <FormattedMessage id={wishListButtonTitle}/>
+                      </PrimaryButton>
+                    }
+                    />
                   <SectionDescriptionMaybe description={description} />
                   <SectionFeaturesMaybe options={amenityOptions} publicData={publicData} />
                   <SectionViewMaybe options={viewOptions} publicData={publicData} />
@@ -497,32 +512,24 @@ export class ListingPageComponent extends Component {
                   />
                 </div>
                 <div>
+  
 
-                <PrimaryButton
-                  className={css.wishlistButtonClass}
-                  onClick={this.onAddToWishlist}
-                  /** TODO: Reflect toggling in button! */
-                >
-                  <FormattedMessage id="ListingPage.addToWishlistButton"/>
-                  
-                </PrimaryButton>
-
-                <BookingPanel
-                  className={css.bookingPanel}
-                  listing={currentListing}
-                  isOwnListing={isOwnListing}
-                  unitType={unitType}
-                  onSubmit={handleBookingSubmit}
-                  title={bookingTitle}
-                  subTitle={bookingSubTitle}
-                  authorDisplayName={authorDisplayName}
-                  onManageDisableScrolling={onManageDisableScrolling}
-                  timeSlots={timeSlots}
-                  fetchTimeSlotsError={fetchTimeSlotsError}
-                  onFetchTransactionLineItems={onFetchTransactionLineItems}
-                  lineItems={lineItems}
-                  fetchLineItemsInProgress={fetchLineItemsInProgress}
-                  fetchLineItemsError={fetchLineItemsError}
+                  <BookingPanel
+                    className={css.bookingPanel}
+                    listing={currentListing}
+                    isOwnListing={isOwnListing}
+                    unitType={unitType}
+                    onSubmit={handleBookingSubmit}
+                    title={bookingTitle}
+                    subTitle={bookingSubTitle}
+                    authorDisplayName={authorDisplayName}
+                    onManageDisableScrolling={onManageDisableScrolling}
+                    timeSlots={timeSlots}
+                    fetchTimeSlotsError={fetchTimeSlotsError}
+                    onFetchTransactionLineItems={onFetchTransactionLineItems}
+                    lineItems={lineItems}
+                    fetchLineItemsInProgress={fetchLineItemsInProgress}
+                    fetchLineItemsError={fetchLineItemsError}
                   />
                 </div>
               </div>

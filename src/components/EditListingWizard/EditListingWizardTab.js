@@ -108,7 +108,20 @@ const EditListingWizardTab = props => {
 
   const onCompleteEditListingWizardTab = (tab, updateValues) => {
     // Normalize images for API call
-    const { images: updatedImages, ...otherValues } = updateValues;
+    let { images: updatedImages, ...otherValues } = updateValues;
+
+    // Add listing id to extended data on Features tab for querying
+    if (tab === FEATURES && isNewListingFlow) {
+      console.log('updating id!')
+      otherValues = {
+        ...otherValues,
+        publicData: {
+          ...otherValues.publicData,
+          id: currentListing.id.uuid
+        }
+      };
+    }
+
     const imageProperty =
       typeof updatedImages !== 'undefined' ? { images: imageIds(updatedImages) } : {};
     const updateValuesWithImages = { ...otherValues, ...imageProperty };

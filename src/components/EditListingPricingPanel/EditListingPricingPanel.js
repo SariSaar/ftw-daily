@@ -31,7 +31,6 @@ const EditListingPricingPanel = props => {
   const classes = classNames(rootClassName || css.root, className);
   const currentListing = ensureOwnListing(listing);
   const { price, publicData } = currentListing.attributes;
-  console.log({ publicData })
   const cleaningFee = publicData && publicData.cleaningFee || null;
 
   const cleaningFeeAsMoney = cleaningFee
@@ -67,8 +66,6 @@ const EditListingPricingPanel = props => {
             },
           },
         };
-
-        console.log({ updatedValues })
 
         onSubmit(updatedValues);
       }}
