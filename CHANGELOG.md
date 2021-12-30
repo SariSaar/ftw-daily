@@ -14,12 +14,55 @@ way to update this template, but currently, we follow a pattern:
 
 ## Upcoming version 2021-XX-XX
 
+## [v8.4.0] 2021-12-02
+
+- [fix] Mobile safari zooms if input-related elements have smaller font-size than 16px. This updates
+  textarea and select element styles too. [#1489](https://github.com/sharetribe/ftw-daily/pull/1489)
+- [fix] Dependabot: Bump passport-oauth2 from 1.5.0 to 1.6.1
+  [#1487](https://github.com/sharetribe/ftw-daily/pull/1487)
+- [fix] Fix bugs in checkout process:
+
+  - Submit button was enabled prematurely for onetime payments
+  - Toggling between default card and onetime payment flows was not working correctly in case of
+    error (e.g. network error).
+  - Calling Stripe.confirmCardPayment when status is requires_capture is unnecessary.
+
+  [#1486](https://github.com/sharetribe/ftw-daily/pull/1486)
+
+- [change] Update many dependencies. See full list in the package.json changes in the PR.
+  [#1483](https://github.com/sharetribe/ftw-daily/pull/1483)
+- [fix] Double click issue. Show dedicated message, when current user doesn't have a pending email
+  address, but there's a verification error.
+  [#1485](https://github.com/sharetribe/ftw-daily/pull/1485)
+- [change] Update comment about how scrollIntoView works with links using hash.
+  [#1484](https://github.com/sharetribe/ftw-daily/pull/1484)
+- [fix] Account pages: mobile tab navigation should only scroll horizontally
+  [#1481](https://github.com/sharetribe/ftw-daily/pull/1481)
+- [fix] Temporarily disallow Node v17, since it causes issues with dependencies.
+  [#1479](https://github.com/sharetribe/ftw-daily/pull/1479)
+- [fix] Fix modal close button text/icon alignment
+  [#1476](https://github.com/sharetribe/ftw-daily/pull/1476)
+
+  [v8.4.0]: https://github.com/sharetribe/ftw-daily/compare/v8.3.0...v8.4.0
+
+## [v8.3.0] 2021-09-22
+
+- [change] Increase input font size on mobile to avoid Mobile Safari zooming in when focusing on
+  inputs. [#1473](https://github.com/sharetribe/ftw-daily/pull/1473)
+- [change] Update browserlist data to match modern browsers.
+  [#1468](https://github.com/sharetribe/ftw-daily/pull/1468)
+- [fix] Font-size was too big for Stripe Elements on small screens on PaymentMethodsForm.
+  [#1471](https://github.com/sharetribe/ftw-daily/pull/1471)
+- [fix] Remove unnecessary language import: fr.json
+  [#1469](https://github.com/sharetribe/ftw-daily/pull/1469)
 - [fix] Font-size for Poppins font was too big for Stripe Elements on small screens.
   [#1465](https://github.com/sharetribe/ftw-daily/pull/1465)
 - [change] Updates to some of the libraries. React Intl had a breaking change v3 -> v5.
   [#464](https://github.com/sharetribe/ftw-daily/pull/1464)
 - [fix] Adblockers might block Google analytics (window.ga) and cause an error.
   [#1462](https://github.com/sharetribe/ftw-daily/pull/1462)
+
+  [v8.3.0]: https://github.com/sharetribe/ftw-daily/compare/v8.2.0...v8.3.0
 
 ## [v8.2.0] 2021-08-06
 
