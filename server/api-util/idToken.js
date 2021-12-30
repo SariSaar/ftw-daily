@@ -19,6 +19,10 @@ const issuerUrl = useDevApiServer ? `http://localhost:${PORT}` : `${rootUrl}`;
  * @return {Promise} idToken
  */
 exports.createIdToken = (idpClientId, user, options) => {
+  console.log('idpClientId: ', JSON.stringify(idpClientId))
+  console.log('user: ', JSON.stringify(user))
+  console.log('options: ', JSON.stringify(options))
+  
   if (!idpClientId) {
     console.error('Missing idp client id!');
     return;
