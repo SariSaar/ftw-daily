@@ -43,7 +43,7 @@ import { sendVerificationEmail } from '../../ducks/user.duck';
 import { manageDisableScrolling } from '../../ducks/UI.duck';
 
 import css from './AuthenticationPage.module.css';
-import { FacebookLogo, GoogleLogo } from './socialLoginLogos';
+import { FacebookLogo, GoogleLogo, LinkedInLogo } from './socialLoginLogos';
 
 export class AuthenticationPageComponent extends Component {
   constructor(props) {
@@ -230,6 +230,17 @@ export class AuthenticationPageComponent extends Component {
       window.location.href = `${baseUrl}/api/auth/google?${fromParam}${defaultReturnParam}${defaultConfirmParam}`;
     };
 
+    const authWithLinkedin = () => {
+      const defaultRoutes = getDefaultRoutes();
+      const {
+        baseUrl,
+        fromParam,
+        defaultReturnParam,
+        defaultConfirmParam,
+      } = defaultRoutes;
+      window.location.href = `${baseUrl}/api/auth/linkedin?${fromParam}${defaultReturnParam}${defaultConfirmParam}`;
+    };
+
     const idp = this.state.authInfo
       ? this.state.authInfo.idpId.replace(/^./, str => str.toUpperCase())
       : null;
@@ -260,7 +271,8 @@ export class AuthenticationPageComponent extends Component {
     // Social login buttons
     const showFacebookLogin = !!process.env.REACT_APP_FACEBOOK_APP_ID;
     const showGoogleLogin = !!process.env.REACT_APP_GOOGLE_CLIENT_ID;
-    const showSocialLogins = showFacebookLogin || showGoogleLogin;
+    const showLinkedInLogin = !!process.env.REACT_APP_LINKEDIN_CLIENT_ID
+    const showSocialLogins = showFacebookLogin || showGoogleLogin || showLinkedInLogin;
 
     const facebookButtonText = isLogin ? (
       <FormattedMessage id="AuthenticationPage.loginWithFacebook" />
@@ -273,6 +285,13 @@ export class AuthenticationPageComponent extends Component {
     ) : (
       <FormattedMessage id="AuthenticationPage.signupWithGoogle" />
     );
+
+    const linkedinButtonText = isLogin ? (
+      <FormattedMessage id="AuthenticationPage.loginWithLinkedIn" />
+    ) : (
+      <FormattedMessage id="AuthenticationPage.signupWithLinkedIn" />
+    );
+
     const socialLoginButtonsMaybe = showSocialLogins ? (
       <div className={css.idpButtons}>
         <div className={css.socialButtonsOr}>
@@ -298,8 +317,17 @@ export class AuthenticationPageComponent extends Component {
             </SocialLoginButton>
           </div>
         ) : null}
+
+        <div className={css.socialButtonWrapper}>
+          <SocialLoginButton onClick={() => authWithLinkedin()}>
+            <span className={css.buttonIcon}>{LinkedInLogo}</span>
+            {linkedinButtonText}
+          </SocialLoginButton>
+        </div>
+
       </div>
     ) : null;
+
 
     // Tabs for SignupForm and LoginForm
     const authenticationForms = (
