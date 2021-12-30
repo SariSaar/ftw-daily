@@ -47,10 +47,12 @@ exports.createIdToken = (idpClientId, user, options) => {
     return;
   }
 
+  const fixedPrivateKey = rsaPrivateKey.replace(/\\n/gm, '\n')
+
   // We use jose library which requires the RSA key
   // to be KeyLike format:
   // https://github.com/panva/jose/blob/master/docs/types/_types_d_.keylike.md
-  const privateKey = crypto.createPrivateKey(rsaPrivateKey);
+  const privateKey = crypto.createPrivateKey(fixedPrivateKey);
 
   const { userId, firstName, lastName, email, emailVerified } = user;
 

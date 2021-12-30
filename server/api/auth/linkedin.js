@@ -33,7 +33,6 @@ const strategyOptions = {
 };
 
 const verifyCallback = (req, accessToken, refreshToken, profile, done) => {
-    console.log('accessToken inside verifyCallback: ', JSON.stringify(accessToken))
   // We can can use util function to generate id token to match OIDC so that we can use
   // our custom id provider in Flex
 
