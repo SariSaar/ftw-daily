@@ -39,6 +39,7 @@ const strategyOptions = {
 const verifyCallback = (req, accessToken, refreshToken, profile, done) => {
   // We can can use util function to generate id token to match OIDC so that we can use
   // our custom id provider in Flex
+  console.log('inside verifyCallback, PROFILE: \n', JSON.stringify(profile))
 
   const locale = Object.keys(profile._json.firstName.localized)[0];
 
@@ -93,6 +94,7 @@ if (clientID) {
 }
 
 exports.authenticateAuth0 = (req, res, next) => {
+  console.log('inside authenticateAuth0; PASSPORT: \n', JSON.stringify(passport))
   const from = req.query.from ? req.query.from : null;
   const defaultReturn = req.query.defaultReturn ? req.query.defaultReturn : null;
   const defaultConfirm = req.query.defaultConfirm ? req.query.defaultConfirm : null;
