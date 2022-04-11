@@ -31,7 +31,7 @@ const strategyOptions = {
   clientSecret,
   callbackURL,
   domain,
-  scope: ['r_emailaddress', 'r_liteprofile'],
+  scope: ['email', 'profile'],
   passReqToCallback: true,
   state: false,
 };
@@ -113,7 +113,6 @@ exports.authenticateAuth0 = (req, res, next) => {
 
   passport.authenticate('auth0', {
     state: paramsAsString,
-    scope: 'email profile',
   })(req, res, next);
 };
 
