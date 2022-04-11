@@ -33,7 +33,7 @@ const strategyOptions = {
   domain,
   scope: ['r_emailaddress', 'r_liteprofile'],
   passReqToCallback: true,
-  state: true,
+  state: false,
 };
 
 const verifyCallback = (req, accessToken, refreshToken, profile, done) => {
@@ -109,7 +109,7 @@ exports.authenticateAuth0 = (req, res, next) => {
 
   passport.authenticate('auth0', {
     state: paramsAsString,
-    scope: 'openid email profile',
+    scope: 'email profile',
   })(req, res, next);
 };
 
