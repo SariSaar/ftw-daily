@@ -24,6 +24,7 @@ const {
   authenticateLinkedin,
   authenticateLinkedinCallback,
 } = require('./api/auth/linkedin');
+const { authenticateAuth0, authenticateAuth0Callback } = require('./api/auth/auth0')
 
 const router = express.Router();
 
@@ -91,5 +92,13 @@ router.get('/auth/linkedin', authenticateLinkedin);
 // with Linkedin. In this route a Passport.js custom callback is used for calling
 // loginWithIdp endpoint in Flex API to authenticate user to Flex
 router.get('/auth/linkedin/callback', authenticateLinkedinCallback);
+
+// This endpoint is called when the user wants to initiate authentication with Auth0
+router.get('/auth/auth0', authenticateAuth0);
+
+// This is the route for callback URL the user is redirected after authenticating
+// with Auth0. In this route a Passport.js custom callback is used for calling
+// loginWithIdp endpoint in Flex API to authenticate user to Flex
+router.get('/auth/auth0/callback', authenticateAuth0Callback);
 
 module.exports = router;

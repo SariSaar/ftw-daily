@@ -241,6 +241,17 @@ export class AuthenticationPageComponent extends Component {
       window.location.href = `${baseUrl}/api/auth/linkedin?${fromParam}${defaultReturnParam}${defaultConfirmParam}`;
     };
 
+    const authWithAuth0 = () => {
+      const defaultRoutes = getDefaultRoutes();
+      const {
+        baseUrl,
+        fromParam,
+        defaultReturnParam,
+        defaultConfirmParam,
+      } = defaultRoutes;
+      window.location.href = `${baseUrl}/api/auth/auth0?${fromParam}${defaultReturnParam}${defaultConfirmParam}`;
+    };
+
     const idp = this.state.authInfo
       ? this.state.authInfo.idpId.replace(/^./, str => str.toUpperCase())
       : null;
@@ -292,6 +303,12 @@ export class AuthenticationPageComponent extends Component {
       <FormattedMessage id="AuthenticationPage.signupWithLinkedIn" />
     );
 
+    const auth0ButtonText = isLogin ? (
+      <FormattedMessage id="AuthenticationPage.loginWithAuth0" />
+    ) : (
+      <FormattedMessage id="AuthenticationPage.signupWithAuth0" />
+    );
+
     const socialLoginButtonsMaybe = showSocialLogins ? (
       <div className={css.idpButtons}>
         <div className={css.socialButtonsOr}>
@@ -322,6 +339,13 @@ export class AuthenticationPageComponent extends Component {
           <SocialLoginButton onClick={() => authWithLinkedin()}>
             <span className={css.buttonIcon}>{LinkedInLogo}</span>
             {linkedinButtonText}
+          </SocialLoginButton>
+        </div>
+
+
+        <div className={css.socialButtonWrapper}>
+          <SocialLoginButton onClick={() => authWithAuth0()}>
+            {auth0ButtonText}
           </SocialLoginButton>
         </div>
 
