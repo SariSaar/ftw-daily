@@ -93,7 +93,11 @@ if (clientID) {
 }
 
 exports.authenticateAuth0 = (req, res, next) => {
-  console.log('inside authenticateAuth0; PASSPORT: \n', JSON.stringify(passport))
+  console.log(
+    'inside authenticateAuth0; PASSPORT: \n',
+    JSON.stringify(passport),
+    'req.query: \n',
+    JSON.stringify(req.query))
   const from = req.query.from ? req.query.from : null;
   const defaultReturn = req.query.defaultReturn ? req.query.defaultReturn : null;
   const defaultConfirm = req.query.defaultConfirm ? req.query.defaultConfirm : null;
@@ -114,10 +118,14 @@ exports.authenticateAuth0 = (req, res, next) => {
 };
 
 // Use custom callback for calling loginWithIdp enpoint
-// to log in the user to Flex with the data from Linkedin
+// to log in the user to Flex with the data from Auth0
 exports.authenticateAuth0Callback = (req, res, next) => {
   passport.authenticate('auth0', function(err, user) {
-    console.log('INSIDE authenticateAuth0Callback, err: \n', JSON.stringify(err))
+    console.log(
+      'INSIDE authenticateAuth0Callback, err: \n',
+      JSON.stringify(err),
+      'user: \n', 
+      JSON.stringify(user))
     loginWithIdp(err, user, req, res, idpClientId, idpId);
   })(req, res, next);
 };
