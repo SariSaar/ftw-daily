@@ -88,7 +88,6 @@ const verifyCallback = (req, accessToken, refreshToken, profile, done) => {
     .catch(e => console.error(e));
 };
 
-// ClientId is required when adding a new Linkedin strategy to passport
 if (clientID) {
   passport.use(new Auth0Strategy(strategyOptions, verifyCallback));
 }

@@ -222,6 +222,7 @@ export const signup = params => (dispatch, getState, sdk) => {
 };
 
 export const signupWithIdp = params => (dispatch, getState, sdk) => {
+  console.log('inside signUpWithIdp, params: \n', JSON.stringify(params))
   dispatch(confirmRequest());
   return createUserWithIdp(params)
     .then(res => {
