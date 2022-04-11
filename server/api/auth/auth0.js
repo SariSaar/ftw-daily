@@ -33,6 +33,7 @@ const strategyOptions = {
   domain,
   scope: ['r_emailaddress', 'r_liteprofile'],
   passReqToCallback: true,
+  state: false,
 };
 
 const verifyCallback = (req, accessToken, refreshToken, profile, done) => {
