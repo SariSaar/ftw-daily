@@ -288,7 +288,7 @@ app.get('*', (req, res) => {
 // will be logged there.
 app.use(log.errorHandler());
 
-app.use(auth(auth0Config));
+app.use(auth0(auth0Config));
 
 if (cspEnabled) {
   // Dig out the value of the given CSP report key from the request body.
