@@ -64,7 +64,7 @@ const errorPage = fs.readFileSync(path.join(buildPath, '500.html'), 'utf-8');
 const auth0Config = {
   authRequired: false,
   auth0Logout: true,
-  baseURL: process.env.baseURL,
+  baseURL: process.env.REACT_APP_CANONICAL_ROOT_URL,
   clientID: 'Nlz2lA2b0GhUgdaWfIZEnvVzYMpv0UTp',
   issuerBaseURL: 'https://dev-nzwgwdf3.us.auth0.com',
   secret: 'LONG_RANDOM_STRING',
