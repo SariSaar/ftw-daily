@@ -88,15 +88,9 @@ const verifyCallback = (req, accessToken, refreshToken, profile, done) => {
     .catch(e => console.error(e));
 };
 
-if (clientID) {
-  passport.use(new Auth0Strategy(strategyOptions, verifyCallback));
-}
-
 exports.authenticateAuth0 = (req, res, next) => {
   console.log(
-    'inside authenticateAuth0; PASSPORT: \n',
-    JSON.stringify(passport),
-    'req.query: \n',
+    'inside authenticateAuth0 req.query: \n',
     JSON.stringify(req.query))
   const from = req.query.from ? req.query.from : null;
   const defaultReturn = req.query.defaultReturn ? req.query.defaultReturn : null;
@@ -112,23 +106,24 @@ exports.authenticateAuth0 = (req, res, next) => {
   console.log('paramsAsString inside authenticateAuth0: \n', paramsAsString)
   console.log('req.oidc\n', JSON.stringify(req.oidc), '\n res.oidc\n', res.oidc, '\n callbackUrl: ', callbackURL)
 
-  res.oidc.login({ returnTo: callbackURL });
+  res.oidc.login();
 
-
-  // passport.authenticate('auth0', {
-  //   state: paramsAsString,
-  // })(req, res, next);
 };
 
 // Use custom callback for calling loginWithIdp enpoint
 // to log in the user to Flex with the data from Auth0
 exports.authenticateAuth0Callback = (req, res, next) => {
-  passport.authenticate('auth0', function(err, user) {
-    console.log(
-      'INSIDE authenticateAuth0Callback, err: \n',
-      JSON.stringify(err),
-      'user: \n', 
-      JSON.stringify(user))
-    loginWithIdp(err, user, req, res, idpClientId, idpId);
-  })(req, res, next);
+  console.log(
+    'inside authenticateAuth0Callback res.oidc: \n', res.oidc,
+    '\n res.locals.user \n', res.locals.user,
+    '\n req.user\n', req.user)
+  // This is what needs to happen on the authenticate
+  // function(err, user) {
+  //   console.log(
+  //     'INSIDE authenticateAuth0Callback, err: \n',
+  //     JSON.stringify(err),
+  //     'user: \n', 
+  //     JSON.stringify(user))
+  //   loginWithIdp(err, user, req, res, idpClientId, idpId);
+  // };
 };

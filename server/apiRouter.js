@@ -102,6 +102,9 @@ router.get('/auth/auth0', authenticateAuth0);
 // This is the route for callback URL the user is redirected after authenticating
 // with Auth0. In this route a Passport.js custom callback is used for calling
 // loginWithIdp endpoint in Flex API to authenticate user to Flex
-router.get('/auth/auth0/callback', authenticateAuth0Callback);
+// router.post('/auth/auth0/callback', authenticateAuth0Callback);
+router.post('/auth/auth0/callback', (req, res) => {
+  console.log('inside auth0 callback:\n user, ', req.oidc.user)
+})
 
 module.exports = router;
