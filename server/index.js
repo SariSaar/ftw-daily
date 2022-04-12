@@ -56,8 +56,22 @@ const CSP = process.env.REACT_APP_CSP;
 const cspReportUrl = '/csp-report';
 const cspEnabled = CSP === 'block' || CSP === 'report';
 const app = express();
+const { auth: auth0 } = require('express-openid-connect');
+
 
 const errorPage = fs.readFileSync(path.join(buildPath, '500.html'), 'utf-8');
+
+const auth0Config = {
+  authRequired: false,
+  auth0Logout: true,
+  baseURL: process.env.baseURL,
+  clientID: 'Nlz2lA2b0GhUgdaWfIZEnvVzYMpv0UTp',
+  issuerBaseURL: 'https://dev-nzwgwdf3.us.auth0.com',
+  secret: 'LONG_RANDOM_STRING',
+  routes: {
+    login: false,
+  }
+};
 
 // load sitemap and robots file structure
 // and write those into files
@@ -273,6 +287,8 @@ app.get('*', (req, res) => {
 // Set error handler. If Sentry is set up, all error responses
 // will be logged there.
 app.use(log.errorHandler());
+
+app.use(auth(auth0Config));
 
 if (cspEnabled) {
   // Dig out the value of the given CSP report key from the request body.

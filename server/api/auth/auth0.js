@@ -1,13 +1,8 @@
 const passport = require('passport');
-const auth0 = require('auth0-js');
 var Auth0Strategy = require('passport-auth0').Strategy;
 
 const loginWithIdp = require('./loginWithIdp');
 const { createIdToken } = require('../../api-util/idToken');
-const webAuth = new auth0.WebAuth({
-  domain:       'dev-nzwgwdf3.us.auth0.com',
-  clientID:     'Nlz2lA2b0GhUgdaWfIZEnvVzYMpv0UTp'
-});
 
 const radix = 10;
 const PORT = parseInt(process.env.REACT_APP_DEV_API_SERVER_PORT, radix);
@@ -116,13 +111,8 @@ exports.authenticateAuth0 = (req, res, next) => {
   const paramsAsString = JSON.stringify(params);
   console.log('paramsAsString inside authenticateAuth0: \n', paramsAsString)
 
-  webAuth.authorize({
-    clientID: 'Nlz2lA2b0GhUgdaWfIZEnvVzYMpv0UTp',
-    responseType: 'token',
-    redirectUri: callbackURL,
-    scope: 'openid profile email',
-    state: 'YOUR_STATE'
-  })
+  res.oidc.login({ returnTo: callbackURL });
+
 
   // passport.authenticate('auth0', {
   //   state: paramsAsString,

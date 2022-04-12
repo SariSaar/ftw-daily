@@ -17,3 +17,5 @@ Source materials:
 Follow the LinkedIn proxy steps from 9 onwards
 
 http://www.passportjs.org/packages/passport-auth0/
+
+https://github.com/auth0/express-openid-connect/blob/master/EXAMPLES.md#3-route-customization
