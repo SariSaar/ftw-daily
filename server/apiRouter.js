@@ -95,6 +95,9 @@ router.get('/auth/linkedin/callback', authenticateLinkedinCallback);
 
 // This endpoint is called when the user wants to initiate authentication with Auth0
 router.get('/auth/auth0', authenticateAuth0);
+// router.get('/auth/auth0', (req, res) => {
+//   console.log('login: ', res.oidc.login, '\n req.oidc: \n', JSON.stringify(req.oidc))
+//   return res.oidc.login({ returnTo: '/auth/auth0/callback' })})
 
 // This is the route for callback URL the user is redirected after authenticating
 // with Auth0. In this route a Passport.js custom callback is used for calling

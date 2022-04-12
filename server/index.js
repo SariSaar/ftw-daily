@@ -55,8 +55,8 @@ const TRUST_PROXY = process.env.SERVER_SHARETRIBE_TRUST_PROXY || null;
 const CSP = process.env.REACT_APP_CSP;
 const cspReportUrl = '/csp-report';
 const cspEnabled = CSP === 'block' || CSP === 'report';
-const app = express();
 const { auth: auth0 } = require('express-openid-connect');
+const app = express();
 
 
 const errorPage = fs.readFileSync(path.join(buildPath, '500.html'), 'utf-8');
@@ -174,6 +174,8 @@ if (!dev) {
 // a 3rd party identity provider (e.g. Facebook or Google)
 app.use(passport.initialize());
 
+app.use(auth0(auth0Config));
+
 // Server-side routes that do not render the application
 app.use('/api', apiRouter);
 
@@ -287,8 +289,6 @@ app.get('*', (req, res) => {
 // Set error handler. If Sentry is set up, all error responses
 // will be logged there.
 app.use(log.errorHandler());
-
-app.use(auth0(auth0Config));
 
 if (cspEnabled) {
   // Dig out the value of the given CSP report key from the request body.
