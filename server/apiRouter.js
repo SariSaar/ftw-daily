@@ -104,7 +104,9 @@ router.get('/auth/auth0', authenticateAuth0);
 // loginWithIdp endpoint in Flex API to authenticate user to Flex
 // router.post('/auth/auth0/callback', authenticateAuth0Callback);
 router.post('/auth/auth0/callback', (req, res) => {
-  console.log('inside auth0 callback:\n user, ', req.oidc.user)
+  console.log('inside auth0 callback POST:\n req.oidc, ', req.oidc)
+  console.log('\n req, ', req)
+  console.log('\n res.oidc.user, ', res.oidc.user)
 })
 
 module.exports = router;
