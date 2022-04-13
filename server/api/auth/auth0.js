@@ -106,7 +106,11 @@ exports.authenticateAuth0 = (req, res, next) => {
   console.log('paramsAsString inside authenticateAuth0: \n', paramsAsString)
   console.log('req.oidc\n', JSON.stringify(req.oidc), '\n res.oidc\n', res.oidc, '\n callbackUrl: ', callbackURL)
 
-  res.oidc.login();
+  res.oidc.login({
+    authorizationParams: {
+      scope: 'openid profile email',
+    }
+  });
 
 };
 

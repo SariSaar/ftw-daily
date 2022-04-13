@@ -70,8 +70,11 @@ const auth0Config = {
   clientID: 'Nlz2lA2b0GhUgdaWfIZEnvVzYMpv0UTp',
   issuerBaseURL: 'https://dev-nzwgwdf3.us.auth0.com',
   secret: 'LONG_RANDOM_STRING',
-  routes: {
-    login: false,
+  authorizationParams: {
+    response_type: 'id_token',
+    response_mode: 'form_post',
+    scope: 'openid profile email',
+    custom_param: 'custom_value'
   }
 };
 
