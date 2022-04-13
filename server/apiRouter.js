@@ -116,10 +116,7 @@ router.post('/auth/auth0/callback', (req, res) => {
 })
 
 router.get('/auth/auth0/callback', (req, res) => {
-  console.log('inside auth0 callback POST:\n req, ', req)
-  console.log('\n req.res, ', req.res)
-
-  console.log('\n req.oidc.isAuthenticated(), ', req.oidc.isAuthenticated())
+  console.log('inside auth0 callback POST:\n req.oidc.isAuthenticated(), ', req.oidc.isAuthenticated())
     // req.oidc.fetchUserInfo()
     //   .then(info => {
     //     console.log('userInfo: ', info)
