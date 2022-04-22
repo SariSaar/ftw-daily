@@ -1,6 +1,5 @@
 const passport = require('passport');
-var Auth0Strategy = require('passport-auth0').Strategy;
-
+const Auth0Strategy = require('passport-auth0');
 const loginWithIdp = require('./loginWithIdp');
 const { createIdToken } = require('../../api-util/idToken');
 
@@ -27,53 +26,56 @@ if (useDevApiServer) {
 }
 
 const strategyOptions = {
+  issuer: `https://${domain}/`,
+  authorizationURL: `https://${domain}/authorize`,
+  tokenURL: `https://${domain}/oauth/token`,
+  domain,
   clientID,
   clientSecret,
   callbackURL,
-  domain,
-  scope: ['email', 'profile'],
-  passReqToCallback: true,
+  scope: ['openid profile email'],
   state: false,
+  passReqToCallback: true
 };
 
-const verifyCallback = (req, accessToken, refreshToken, profile, done) => {
+const verifyCallback = (req, accessToken, refreshToken, extraParams, profile, done) => {
   // We can can use util function to generate id token to match OIDC so that we can use
   // our custom id provider in Flex
-  console.log('inside verifyCallback, PROFILE: \n', JSON.stringify(profile))
 
-  const locale = Object.keys(profile._json.firstName.localized)[0];
+  // Depening on where you get your Auth0 signups, you will need to determine first and last names for the user from the data
+  const userNameElements = profile.nickname.split(".");
 
-  const firstName = profile._json.firstName.localized[locale];
-  const lastName = profile._json.lastName.localized[locale];
+  const firstName = userNameElements[0];
+  const lastName = userNameElements[userNameElements.length - 1];
   const email = profile.emails[0].value;
-
-  // LikedIn API doesn't return information if the email is verified or not directly.
-  // However, it seems that with OAUTH2 flow authentication is not possible if the email is not verified.
-  // There is no official documentation about this, but through testing it seems like this can be trusted
-  // For reference: https://stackoverflow.com/questions/19278201/oauth-request-verified-email-address-from-linkedin
 
   const user = {
     userId: profile.id,
     firstName,
     lastName,
     email,
-    emailVerified: true,
+    emailVerified: profile._json.emailVerified,
   };
 
-  const state = req.query.state;
-  const queryParams = JSON.parse(state);
-
+  // console.log('user: ', user, '\n issuer: ', issuer)
+  let queryParams = {};
+  if (req) {
+    const state = req.query.state;
+    queryParams = JSON.parse(state);
+  }
+  
   const { from, defaultReturn, defaultConfirm } = queryParams;
 
   // These keys are used for signing the ID token (JWT)
   // When you store them to environment variables you should replace
   // any line brakes with '\n'.
   // You should also make sure that the key size is big enough.
-  const rsaPrivateKey = process.env.RSA_PRIVATE_KEY;
+  const rsaPrivateKey = process.env.RSA_PRIVATE_KEY_AUTH.replace(/\\n/gm, '\n');
   const keyId = process.env.KEY_ID;
 
   createIdToken(idpClientId, user, { signingAlg: 'RS256', rsaPrivateKey, keyId })
     .then(idpToken => {
+      console.log('idpToken: ', idpToken)
       const userData = {
         email,
         firstName,
@@ -88,10 +90,12 @@ const verifyCallback = (req, accessToken, refreshToken, profile, done) => {
     .catch(e => console.error(e));
 };
 
+// ClientId is required when adding a new Auth0 strategy to passport
+if (clientID) {
+  passport.use(new Auth0Strategy(strategyOptions, verifyCallback));
+}
+
 exports.authenticateAuth0 = (req, res, next) => {
-  console.log(
-    'inside authenticateAuth0 req.query: \n',
-    JSON.stringify(req.query))
   const from = req.query.from ? req.query.from : null;
   const defaultReturn = req.query.defaultReturn ? req.query.defaultReturn : null;
   const defaultConfirm = req.query.defaultConfirm ? req.query.defaultConfirm : null;
@@ -103,31 +107,16 @@ exports.authenticateAuth0 = (req, res, next) => {
   };
 
   const paramsAsString = JSON.stringify(params);
-  console.log('paramsAsString inside authenticateAuth0: \n', paramsAsString)
-  console.log('req.oidc\n', JSON.stringify(req.oidc), '\n res.oidc\n', res.oidc, '\n callbackUrl: ', callbackURL)
 
-  res.oidc.login({
-    authorizationParams: {
-      scope: 'openid profile email',
-    }
-  });
-
+  passport.authenticate('auth0', {
+    state: paramsAsString,
+  })(req, res, next);
 };
 
 // Use custom callback for calling loginWithIdp enpoint
 // to log in the user to Flex with the data from Auth0
 exports.authenticateAuth0Callback = (req, res, next) => {
-  console.log(
-    'inside authenticateAuth0Callback res.oidc: \n', res.oidc,
-    '\n res.locals.user \n', res.locals.user,
-    '\n req.user\n', req.user)
-  // This is what needs to happen on the authenticate
-  // function(err, user) {
-  //   console.log(
-  //     'INSIDE authenticateAuth0Callback, err: \n',
-  //     JSON.stringify(err),
-  //     'user: \n', 
-  //     JSON.stringify(user))
-  //   loginWithIdp(err, user, req, res, idpClientId, idpId);
-  // };
+  passport.authenticate('auth0', function(err, user) {
+    loginWithIdp(err, user, req, res, idpClientId, idpId);
+  })(req, res, next);
 };

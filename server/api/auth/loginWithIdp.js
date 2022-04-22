@@ -22,12 +22,13 @@ const baseUrl = BASE_URL ? { baseUrl: BASE_URL } : {};
 
 module.exports = (err, user, req, res, idpClientId, idpId) => {
   console.log(
-    'INSIDE loginWithIdp, user: \n', 
+    'INSIDE loginWithIdp, \n user:', 
     JSON.stringify(user),
-    'idpClientId: \n',
+    '\n idpClientId: ',
     JSON.stringify(idpClientId),
-    'idpId: \n',
-    JSON.stringify(idpId))
+    '\nidpId: ',
+    JSON.stringify(idpId)
+    )
   if (err) {
     log.error(err, 'fetching-user-data-from-idp-failed');
 
@@ -135,6 +136,8 @@ module.exports = (err, user, req, res, idpClientId, idpId) => {
           maxAge: 15 * 60 * 1000, // 15 minutes
         }
       );
+
+      console.log('defaultConfirm after login fails: ', defaultConfirm)
 
       res.redirect(`${rootUrl}${defaultConfirm}#`);
     });

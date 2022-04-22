@@ -43,6 +43,9 @@ const { sitemapStructure } = require('./sitemap');
 const csp = require('./csp');
 const sdkUtils = require('./api-util/sdk');
 
+const expressSession = require("express-session");
+
+
 const buildPath = path.resolve(__dirname, '..', 'build');
 const env = process.env.REACT_APP_ENV;
 const dev = process.env.REACT_APP_ENV === 'development';
@@ -61,22 +64,19 @@ const app = express();
 
 const errorPage = fs.readFileSync(path.join(buildPath, '500.html'), 'utf-8');
 
-const rootUrl = process.env.REACT_APP_CANONICAL_ROOT_URL;
-
-const auth0Config = {
-  authRequired: false,
-  auth0Logout: true,
-  baseURL: `${rootUrl}/api/auth/auth0/`,
-  clientID: 'Nlz2lA2b0GhUgdaWfIZEnvVzYMpv0UTp',
-  issuerBaseURL: 'https://dev-nzwgwdf3.us.auth0.com',
-  secret: 'LONG_RANDOM_STRING',
-  authorizationParams: {
-    response_type: 'id_token',
-    response_mode: 'form_post',
-    scope: 'openid profile email',
-    custom_param: 'custom_value'
-  }
+const session = {
+  secret: process.env.SESSION_SECRET,
+  cookie: {},
+  resave: false,
+  saveUninitialized: false
 };
+
+// if (app.get("env") === "production") {
+//   // Serve secure cookies, requires HTTPS
+//   session.cookie.secure = true;
+// }
+
+app.use(expressSession(session));
 
 // load sitemap and robots file structure
 // and write those into files
@@ -152,6 +152,7 @@ app.use('/static', express.static(path.join(buildPath, 'static')));
 app.use('/robots.txt', express.static(path.join(buildPath, 'robots.txt')));
 app.use(cookieParser());
 
+
 // These .well-known/* endpoints will be enabled if you are using FTW as OIDC proxy
 // https://www.sharetribe.com/docs/cookbook-social-logins-and-sso/setup-open-id-connect-proxy/
 // We need to handle these endpoints separately so that they are accessible by Flex
@@ -178,8 +179,7 @@ if (!dev) {
 // We use passport to enable authenticating with
 // a 3rd party identity provider (e.g. Facebook or Google)
 app.use(passport.initialize());
-
-app.use(auth0(auth0Config));
+app.use(passport.session());
 
 // Server-side routes that do not render the application
 app.use('/api', apiRouter);

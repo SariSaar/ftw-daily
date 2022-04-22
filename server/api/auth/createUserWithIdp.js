@@ -12,12 +12,12 @@ const BASE_URL = process.env.REACT_APP_SHARETRIBE_SDK_BASE_URL;
 const FACBOOK_APP_ID = process.env.REACT_APP_FACEBOOK_APP_ID;
 const GOOGLE_CLIENT_ID = process.env.REACT_APP_GOOGLE_CLIENT_ID;
 const LINKEDIN_PROXY_CLIENT_ID = process.env.LINKEDIN_PROXY_CLIENT_ID;
-const AUTH0_PROXY_CLIENT_ID = process.env.AUTH0_PROXY_CLIENT_ID;
+const AUTH0_PROXY_CLIENT_ID = process.env.AUTH_PROXY_CLIENT_ID;
 
 const FACEBOOK_IDP_ID = 'facebook';
 const GOOGLE_IDP_ID = 'google';
 const LINKEDIN_PROXY_IDP_ID = process.env.LINKEDIN_PROXY_IDP_ID;
-const AUTH0_PROXY_IDP_ID = process.env.AUTH0_PROXY_IDP_ID;
+const AUTH0_PROXY_IDP_ID = process.env.AUTH_PROXY_IDP_ID;
 
 // Instantiate HTTP(S) Agents with keepAlive set to true.
 // This will reduce the request time for consecutive requests by
@@ -60,6 +60,10 @@ module.exports = (req, res) => {
       : idpId === AUTH0_PROXY_IDP_ID
       ? AUTH0_PROXY_CLIENT_ID
       : null;
+
+  console.log('idpClientId', idpClientId)
+
+  console.log('idpClientId', idpClientId)
 
   sdk.currentUser
     .createWithIdp({ idpId, idpClientId, idpToken, ...rest })
